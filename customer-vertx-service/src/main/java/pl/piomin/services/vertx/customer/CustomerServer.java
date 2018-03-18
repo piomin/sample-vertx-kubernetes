@@ -26,7 +26,7 @@ public class CustomerServer extends AbstractVerticle {
 	
 	public static void main(String[] args) throws Exception {
 		Vertx vertx = Vertx.vertx();
-		vertx.deployVerticle(new MongoVerticle());
+//		vertx.deployVerticle(new MongoVerticle());
 		vertx.deployVerticle(new CustomerServer());
 	}
 	
@@ -77,7 +77,7 @@ public class CustomerServer extends AbstractVerticle {
 			});
 		});
 		
-		discovery.registerServiceImporter(new KubernetesServiceImporter(), new JsonObject().put("namespace", "default"));
+		discovery.registerServiceImporter(new KubernetesServiceImporter(), new JsonObject().put("namespace", "default").put("master", "https://192.168.99.100:8443").put("token", "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tcDZtZHIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImQwZjljZGRjLTJhOWYtMTFlOC04OWJmLTA4MDAyNzgzYmNjMCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.N-3vkNz4MYNEgOy0pBBic9EOzRZknLiVOSiwltMg8hM4FDmj-tkNkqUqNczqDARvCJ8mWMVJQpa5H0kEEt7xxkJF8uVk6IuPvHfwZ0e8WYu5krDeUmWE3bruiqbK8-kHLOz-fsH09LvT0ocmBF8m4AZ9-kiIvy3hbTgMfMD-r9fnfvZ04zUB3KSM6-HkBMIcyXEZUWNvDWwo6wYwAhpHyqG8lbmTZyiAiIicDiEUZmh5lvBIFCttTO54zm1pn3Od7I4kEPSkV3mq3n5DnHYQzxcWY7qrI_cE1q-gj9wu9jFSmZGk-0JTKTKFRf-VtrSuNcJiybawsRBHCLxrYHw-2w"));
 		vertx.createHttpServer().requestHandler(router::accept).listen(8090);	
 		
 	}
