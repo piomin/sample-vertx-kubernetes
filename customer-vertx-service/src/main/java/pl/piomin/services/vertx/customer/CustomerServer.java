@@ -77,7 +77,7 @@ public class CustomerServer extends AbstractVerticle {
 			});
 		});
 		
-		discovery.registerServiceImporter(new KubernetesServiceImporter(), new JsonObject().put("master", "").put("token", ""));
+		discovery.registerServiceImporter(new KubernetesServiceImporter(), new JsonObject().put("namespace", "default"));
 		vertx.createHttpServer().requestHandler(router::accept).listen(8090);	
 		
 	}
