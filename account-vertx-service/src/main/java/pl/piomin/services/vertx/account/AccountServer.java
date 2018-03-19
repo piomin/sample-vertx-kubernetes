@@ -21,6 +21,7 @@ public class AccountServer extends AbstractVerticle {
 	private static final Logger LOGGER = LoggerFactory.getLogger(AccountServer.class);
 	
 	public static void main(String[] args) throws Exception {
+		System.setProperty("vertx.disableFileCPResolving", "true");
 		Vertx vertx = Vertx.vertx();
 		vertx.deployVerticle(new MongoVerticle());
 		vertx.deployVerticle(new AccountServer());
