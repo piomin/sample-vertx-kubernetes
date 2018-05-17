@@ -12,13 +12,10 @@ public class MongoVerticle extends AbstractVerticle {
 	@Override
 	public void start() throws Exception {
 		JsonObject config = new JsonObject();
-//		o.put("host", "192.168.99.100");
-//		o.put("port", 27017);
-//		o.put("db_name", "test");
-		config.put("connection_string", "mongodb://micro:micro@mongodb/microdb");
+		config.put("connection_string", "mongodb://${MONGODB_USER}:${MONGODB_PASSWORD}@mongodb/${MONGODB_DATABASE}");
 		final MongoClient client = MongoClient.createShared(vertx, config);
 		final AccountRepository service = new AccountRepositoryImpl(client);
 		ProxyHelper.registerService(AccountRepository.class, vertx, service, "account-service");
 	}
-	
+
 }
