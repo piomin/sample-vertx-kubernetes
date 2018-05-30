@@ -1,0 +1,6 @@
+<extension qualifier="openshift">
+    <property name="namespace.use.current">true</property>
+    <property name="namespace.use.existing">sample-deployment</property>
+    <property name="kubernetes.master">https://192.168.99.100:8443</property>
+    <property name="cube.auth.token">xvc9eBG_Gn3OzX05r8cmH4YZefxNnTk6M8bhkQyj_gg</property>
+</extension>
