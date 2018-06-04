@@ -1,0 +1,76 @@
+kind: Template
+apiVersion: v1
+metadata:
+  name: customer-template
+objects:
+  - kind: ImageStream
+    apiVersion: v1
+    metadata:
+      name: customer-image
+    spec:
+      dockerImageRepository: piomin/customer-vertx-service
+  - kind: DeploymentConfig
+    apiVersion: v1
+    metadata:
+      name: customer-service
+    spec:
+      template:
+        metadata:
+          labels:
+            name: "customer-service"
+        spec:
+          containers:
+          - name: "customer-vertx-service"
+            image: "piomin/customer-vertx-service"
+            ports:
+            - containerPort: 8090
+              protocol: TCP
+            env:
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  key: database-user
+                  name: mongodb
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: database-password
+                  name: mongodb
+            - name: DATABASE_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: database-name
+                  name: mongodb
+      replicas: 2
+      triggers:
+      - type: ConfigChange
+      - type: ImageChange
+        imageChangeParams:
+          automatic: true
+          containerNames:
+          - "customer-vertx-service"
+          from:
+            kind: ImageStreamTag
+            name: "customer-image:latest"
+      strategy:
+        type: Rolling
+      paused: false
+      revisionHistoryLimit: 2
+      minReadySeconds: 0
+  - kind: Service
+    apiVersion: v1
+    metadata:
+      name: customer-service
+    spec:
+      ports:
+      - name: "web"
+        port: 8090
+  - kind: Route
+    apiVersion: v1
+    metadata:
+      name: customer-route
+    spec:
+      path: "/customer"
+      to:
+        kind: Service
+        name: customer-service

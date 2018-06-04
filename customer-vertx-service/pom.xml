@@ -185,6 +185,24 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<configuration>
+					<apiVersion>1.24</apiVersion>
+					<certPath>C:\Users\minkowp\.minishift\certs</certPath>
+					<dockerHost>https://192.168.99.100:2376</dockerHost>
+					<sourceDirectory>/</sourceDirectory>
+					<images>
+						<image>
+							<name>piomin/customer-vertx-service</name>
+							<build>
+								<dockerFile>Dockerfile</dockerFile>
+							</build>
+						</image>
+					</images>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
