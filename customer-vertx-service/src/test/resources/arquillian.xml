@@ -7,7 +7,7 @@
         <property name="namespace.use.current">true</property>
         <property name="namespace.use.existing">sample-deployment</property>
         <property name="kubernetes.master">https://192.168.99.100:8443</property>
-        <property name="cube.auth.token">epvmNhTQg_RunIt9qWBldc4VjdE9BSItXlQva3FDNQY</property>
+        <property name="cube.auth.token">EMNHP8QIB4A_VU4kE_vQv8k9he_4AV3GTltrzd06yMU</property>
     </extension>
 
 </arquillian>

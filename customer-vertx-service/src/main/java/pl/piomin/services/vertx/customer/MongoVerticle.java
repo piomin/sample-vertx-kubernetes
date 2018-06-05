@@ -8,13 +8,18 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.serviceproxy.ProxyHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.piomin.services.vertx.customer.data.CustomerRepository;
 import pl.piomin.services.vertx.customer.data.CustomerRepositoryImpl;
 
 public class MongoVerticle extends AbstractVerticle {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(MongoVerticle.class);
+
 	@Override
 	public void start() throws Exception {
+		LOGGER.info("New version");
 		ConfigStoreOptions envStore = new ConfigStoreOptions()
 				.setType("env")
 				.setConfig(new JsonObject().put("keys", new JsonArray().add("DATABASE_USER").add("DATABASE_PASSWORD").add("DATABASE_NAME")));
@@ -25,6 +30,7 @@ public class MongoVerticle extends AbstractVerticle {
 			String password = r.result().getString("DATABASE_PASSWORD");
 			String db = r.result().getString("DATABASE_NAME");
 			JsonObject config = new JsonObject();
+			LOGGER.info("Connecting {} using {}/{}", db, user, password);
 			config.put("connection_string", "mongodb://" + user + ":" + password + "@mongodb/" + db);
 			final MongoClient client = MongoClient.createShared(vertx, config);
 			final CustomerRepository service = new CustomerRepositoryImpl(client);

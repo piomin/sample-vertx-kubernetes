@@ -17,11 +17,11 @@ objects:
       template:
         metadata:
           labels:
-            name: "customer-service"
+            name: customer-service
         spec:
           containers:
-          - name: "customer-vertx-service"
-            image: "piomin/customer-vertx-service"
+          - name: customer-vertx-service
+            image: piomin/customer-vertx-service
             ports:
             - containerPort: 8090
               protocol: TCP
@@ -48,10 +48,10 @@ objects:
         imageChangeParams:
           automatic: true
           containerNames:
-          - "customer-vertx-service"
+          - customer-vertx-service
           from:
             kind: ImageStreamTag
-            name: "customer-image:latest"
+            name: customer-image:latest
       strategy:
         type: Rolling
       paused: false
@@ -65,6 +65,9 @@ objects:
       ports:
       - name: "web"
         port: 8090
+        targetPort: 8090
+      selector:
+        name: customer-service
   - kind: Route
     apiVersion: v1
     metadata:

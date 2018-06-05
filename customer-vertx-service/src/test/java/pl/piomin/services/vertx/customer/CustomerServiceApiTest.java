@@ -1,6 +1,10 @@
 package pl.piomin.services.vertx.customer;
 
 import io.fabric8.openshift.client.OpenShiftClient;
+import okhttp3.*;
+import okio.BufferedSink;
+import org.arquillian.cube.kubernetes.annotations.Named;
+import org.arquillian.cube.kubernetes.annotations.PortForward;
 import org.arquillian.cube.openshift.api.Template;
 import org.arquillian.cube.openshift.impl.client.OpenShiftAssistant;
 import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
@@ -14,6 +18,8 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -29,16 +35,25 @@ public class CustomerServiceApiTest {
     @ArquillianResource
     OpenShiftClient client;
 
-    @RouteURL("customer-route")
-    @AwaitRoute(timeoutUnit = TimeUnit.MINUTES, timeout = 2)
+    @RouteURL(value = "customer-route")
+    @AwaitRoute(timeoutUnit = TimeUnit.MINUTES, timeout = 2, path = "/customer")
     private URL url;
 
     @Test
-    @Template(url = "classpath:deployment.yaml")
+    //@Template(url = "classpath:deployment.yaml")
     public void testRoute() {
-        LOGGER.info("User: {}", client.currentUser());
-        LOGGER.info("Namespace: {}", client.getNamespace());
-        client.pods().list().getItems().forEach(p -> LOGGER.info("Pod: {}", p));
-        LOGGER.info("Url: ", url.getPath());
+        //LOGGER.info("User: {}", client.currentUser());
+        //client.pods().list().getItems().forEach(p -> LOGGER.info("Pod: {}", p));
+        //client.routes().list().getItems().forEach(r -> LOGGER.info("Route: {}", r));
+        LOGGER.info("Url: ", assistant.getRoute().get().getPath());
+        OkHttpClient httpClient = new OkHttpClient();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{\"name\":\"John Smith\", \"age\":33}");
+        Request request = new Request.Builder().url("http://customer-route-sample-deployment.192.168.99.100.nip.io/customer").post(body).build();
+        try {
+            Response response = httpClient.newCall(request).execute();
+            LOGGER.info("Test: response={}", response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
