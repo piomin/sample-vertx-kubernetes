@@ -12,6 +12,7 @@ import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.arquillian.cube.openshift.impl.requirement.RequiresOpenshift;
 import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -19,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -40,18 +40,16 @@ public class CustomerServiceApiTest {
     private URL url;
 
     @Test
-    //@Template(url = "classpath:deployment.yaml")
-    public void testRoute() {
-        //LOGGER.info("User: {}", client.currentUser());
-        //client.pods().list().getItems().forEach(p -> LOGGER.info("Pod: {}", p));
-        //client.routes().list().getItems().forEach(r -> LOGGER.info("Route: {}", r));
-        LOGGER.info("Url: ", assistant.getRoute().get().getPath());
+    @Template(url = "classpath:deployment.yaml")
+    public void testCustomerRoute() {
         OkHttpClient httpClient = new OkHttpClient();
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{\"name\":\"John Smith\", \"age\":33}");
         Request request = new Request.Builder().url("http://customer-route-sample-deployment.192.168.99.100.nip.io/customer").post(body).build();
         try {
             Response response = httpClient.newCall(request).execute();
             LOGGER.info("Test: response={}", response.body().string());
+            Assert.assertNotNull(response.body());
+            Assert.assertEquals(200, response.code());
         } catch (IOException e) {
             e.printStackTrace();
         }
