@@ -3,6 +3,7 @@ package pl.piomin.services.vertx.customer;
 import io.fabric8.openshift.client.OpenShiftClient;
 import okhttp3.*;
 import org.arquillian.cube.openshift.api.Template;
+import org.arquillian.cube.openshift.api.Templates;
 import org.arquillian.cube.openshift.impl.client.OpenShiftAssistant;
 import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
@@ -23,9 +24,14 @@ import java.util.concurrent.TimeUnit;
 @Category(RequiresOpenshift.class)
 @RequiresOpenshift
 @RunWith(ArquillianConditionalRunner.class)
-public class CustomerServiceApiTest {
+@Templates(templates = {
+        @Template(url = "classpath:mongo-deployment.yaml"),
+        @Template(url = "classpath:deployment.yaml"),
+        @Template(url = "classpath:account-deployment.yaml")
+})
+public class CustomerCommunicationTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceApiTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerCommunicationTest.class);
 
     @ArquillianResource
     OpenShiftAssistant assistant;
@@ -36,12 +42,13 @@ public class CustomerServiceApiTest {
     @AwaitRoute(timeoutUnit = TimeUnit.MINUTES, timeout = 2, path = "/customer")
     private URL url;
 
-    //@Test
-    @Template(url = "classpath:deployment.yaml")
+    @Test
     public void testCustomerRoute() {
+        LOGGER.info("Route URL: {}", url);
+        String projectName = assistant.getCurrentProjectName();
         OkHttpClient httpClient = new OkHttpClient();
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{\"name\":\"John Smith\", \"age\":33}");
-        Request request = new Request.Builder().url("http://customer-route-sample-deployment.192.168.99.100.nip.io/customer").post(body).build();
+        Request request = new Request.Builder().url("http://customer-route-" + projectName + ".192.168.99.100.nip.io/customer").post(body).build();
         try {
             Response response = httpClient.newCall(request).execute();
             LOGGER.info("Test: response={}", response.body().string());
@@ -51,4 +58,10 @@ public class CustomerServiceApiTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void testNext() {
+        LOGGER.info("Route UR2L: {}", url);
+    }
+
 }
