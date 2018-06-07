@@ -41,7 +41,7 @@ objects:
                 secretKeyRef:
                   key: database-name
                   name: mongodb
-      replicas: 2
+      replicas: 1
       triggers:
       - type: ConfigChange
       - type: ImageChange

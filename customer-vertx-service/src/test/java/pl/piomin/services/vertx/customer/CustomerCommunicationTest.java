@@ -38,6 +38,8 @@ public class CustomerCommunicationTest {
     @ArquillianResource
     OpenShiftClient client;
 
+    String id;
+
     @RouteURL(value = "customer-route")
     @AwaitRoute(timeoutUnit = TimeUnit.MINUTES, timeout = 2, path = "/customer")
     private URL url;
@@ -60,8 +62,19 @@ public class CustomerCommunicationTest {
     }
 
     @Test
-    public void testNext() {
-        LOGGER.info("Route UR2L: {}", url);
+    public void testGetCustomerWithAccounts() {
+        LOGGER.info("Route URL: {}", url);
+        String projectName = assistant.getCurrentProjectName();
+        OkHttpClient httpClient = new OkHttpClient();
+        Request request = new Request.Builder().url("http://customer-route-" + projectName + ".192.168.99.100.nip.io/customer/" + id).get().build();
+        try {
+            Response response = httpClient.newCall(request).execute();
+            LOGGER.info("Test: response={}", response.body().string());
+            Assert.assertNotNull(response.body());
+            Assert.assertEquals(200, response.code());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
