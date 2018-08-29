@@ -1,6 +1,7 @@
 package pl.piomin.services.vertx.customer;
 
 import io.fabric8.openshift.client.OpenShiftClient;
+import io.vertx.core.json.Json;
 import okhttp3.*;
 import org.arquillian.cube.openshift.api.Template;
 import org.arquillian.cube.openshift.api.Templates;
@@ -11,11 +12,14 @@ import org.arquillian.cube.openshift.impl.requirement.RequiresOpenshift;
 import org.arquillian.cube.requirement.ArquillianConditionalRunner;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.piomin.services.vertx.customer.data.Customer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,6 +33,7 @@ import java.util.concurrent.TimeUnit;
         @Template(url = "classpath:deployment.yaml"),
         @Template(url = "classpath:account-deployment.yaml")
 })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerCommunicationTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerCommunicationTest.class);
@@ -50,12 +55,15 @@ public class CustomerCommunicationTest {
         String projectName = assistant.getCurrentProjectName();
         OkHttpClient httpClient = new OkHttpClient();
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{\"name\":\"John Smith\", \"age\":33}");
-        Request request = new Request.Builder().url("http://customer-route-" + projectName + ".192.168.99.100.nip.io/customer").post(body).build();
+//        Request request = new Request.Builder().url("http://customer-route-" + projectName + ".192.168.99.100.nip.io/customer").post(body).build();
+        Request request = new Request.Builder().url(url + "customer").post(body).build();
         try {
             Response response = httpClient.newCall(request).execute();
             LOGGER.info("Test: response={}", response.body().string());
             Assert.assertNotNull(response.body());
             Assert.assertEquals(200, response.code());
+            Customer c = Json.decodeValue(response.body().string(), Customer.class);
+            this.id = c.getId();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,9 +72,11 @@ public class CustomerCommunicationTest {
     @Test
     public void testGetCustomerWithAccounts() {
         LOGGER.info("Route URL: {}", url);
+        LOGGER.info("Get customer: {}", id);
         String projectName = assistant.getCurrentProjectName();
         OkHttpClient httpClient = new OkHttpClient();
-        Request request = new Request.Builder().url("http://customer-route-" + projectName + ".192.168.99.100.nip.io/customer/" + id).get().build();
+//        Request request = new Request.Builder().url("http://customer-route-" + projectName + ".192.168.99.100.nip.io/customer/" + id).get().build();
+        Request request = new Request.Builder().url(url + "customer" + id).get().build();
         try {
             Response response = httpClient.newCall(request).execute();
             LOGGER.info("Test: response={}", response.body().string());
