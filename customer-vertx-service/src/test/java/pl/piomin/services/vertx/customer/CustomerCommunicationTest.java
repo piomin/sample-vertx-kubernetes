@@ -43,11 +43,15 @@ public class CustomerCommunicationTest {
     @ArquillianResource
     OpenShiftClient client;
 
-    String id;
+    private static String id;
 
     @RouteURL(value = "customer-route")
     @AwaitRoute(timeoutUnit = TimeUnit.MINUTES, timeout = 2, path = "/customer")
     private URL url;
+
+    @RouteURL(value = "account-route")
+    @AwaitRoute(timeoutUnit = TimeUnit.MINUTES, timeout = 2, path = "/account")
+    private URL accountUrl;
 
     @Test
     public void testCustomerRoute() {
@@ -59,10 +63,12 @@ public class CustomerCommunicationTest {
         Request request = new Request.Builder().url(url + "customer").post(body).build();
         try {
             Response response = httpClient.newCall(request).execute();
-            LOGGER.info("Test: response={}", response.body().string());
-            Assert.assertNotNull(response.body());
+            ResponseBody b = response.body();
+            String json = b.string();
+            LOGGER.info("Test: response={}", json);
+            Assert.assertNotNull(b);
             Assert.assertEquals(200, response.code());
-            Customer c = Json.decodeValue(response.body().string(), Customer.class);
+            Customer c = Json.decodeValue(json, Customer.class);
             this.id = c.getId();
         } catch (IOException e) {
             e.printStackTrace();
@@ -76,7 +82,7 @@ public class CustomerCommunicationTest {
         String projectName = assistant.getCurrentProjectName();
         OkHttpClient httpClient = new OkHttpClient();
 //        Request request = new Request.Builder().url("http://customer-route-" + projectName + ".192.168.99.100.nip.io/customer/" + id).get().build();
-        Request request = new Request.Builder().url(url + "customer" + id).get().build();
+        Request request = new Request.Builder().url(url + "customer/" + id).get().build();
         try {
             Response response = httpClient.newCall(request).execute();
             LOGGER.info("Test: response={}", response.body().string());

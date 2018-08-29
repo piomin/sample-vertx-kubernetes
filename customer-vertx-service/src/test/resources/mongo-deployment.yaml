@@ -21,17 +21,6 @@ objects:
         app: mongodb-persistent
         template: mongodb-persistent-template
       name: mongodb
-  - apiVersion: v1
-    kind: PersistentVolumeClaim
-    metadata:
-      name: mongodb
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:
-          storage: 1Gi
-      volumeName: pv0055
   - kind: DeploymentConfig
     apiVersion: apps.openshift.io/v1
     metadata:
@@ -45,12 +34,6 @@ objects:
       replicas: 1
       selector:
         name: mongodb
-      strategy:
-        activeDeadlineSeconds: 21600
-        recreateParams:
-          timeoutSeconds: 600
-        resources: {}
-        type: Recreate
       template:
         metadata:
           labels:
@@ -115,18 +98,6 @@ objects:
                 privileged: false
               terminationMessagePath: /dev/termination-log
               terminationMessagePolicy: File
-              volumeMounts:
-                - mountPath: /var/lib/mongodb/data
-                  name: mongodb-data
-          dnsPolicy: ClusterFirst
-          restartPolicy: Always
-          schedulerName: default-scheduler
-          securityContext: {}
-          terminationGracePeriodSeconds: 30
-          volumes:
-            - name: mongodb-data
-              persistentVolumeClaim:
-                claimName: mongodb
       test: false
       triggers:
         - imageChangeParams:
