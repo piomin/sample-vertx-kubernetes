@@ -4,10 +4,11 @@
   http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
 
     <extension qualifier="openshift">
-        <property name="namespace.use.current">true</property>
-        <property name="namespace.use.existing">sample-deployment</property>
+        <!--<property name="namespace.use.current">true</property>-->
+        <!--<property name="namespace.use.existing">sample-deployment</property>-->
         <property name="kubernetes.master">https://192.168.99.100:8443</property>
-        <property name="cube.auth.token">EMNHP8QIB4A_VU4kE_vQv8k9he_4AV3GTltrzd06yMU</property>
+        <property name="cube.auth.token">INSERT_YOUR_TOKEN</property>
+        <property name="env.config.resource.name">mongo-deployment.yaml</property>
     </extension>
 
 </arquillian>

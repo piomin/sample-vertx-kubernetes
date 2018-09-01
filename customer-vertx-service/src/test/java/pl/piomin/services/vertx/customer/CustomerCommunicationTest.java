@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 @RequiresOpenshift
 @RunWith(ArquillianConditionalRunner.class)
 @Templates(templates = {
-        @Template(url = "classpath:mongo-deployment.yaml"),
+//        @Template(url = "classpath:mongo-deployment.yaml"),
         @Template(url = "classpath:deployment.yaml"),
         @Template(url = "classpath:account-deployment.yaml")
 })
@@ -54,7 +54,7 @@ public class CustomerCommunicationTest {
     private URL accountUrl;
 
     @Test
-    public void testCustomerRoute() {
+    public void test1CustomerRoute() {
         LOGGER.info("Route URL: {}", url);
         String projectName = assistant.getCurrentProjectName();
         OkHttpClient httpClient = new OkHttpClient();
@@ -76,7 +76,25 @@ public class CustomerCommunicationTest {
     }
 
     @Test
-    public void testGetCustomerWithAccounts() {
+    public  void test2AccountRoute() {
+        LOGGER.info("Route URL: {}", accountUrl);
+        OkHttpClient httpClient = new OkHttpClient();
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), "{\"number\":\"01234567890\", \"balance\":10000, \"customerId\":\"" + this.id + "\"}");
+        Request request = new Request.Builder().url(accountUrl + "account").post(body).build();
+        try {
+            Response response = httpClient.newCall(request).execute();
+            ResponseBody b = response.body();
+            String json = b.string();
+            LOGGER.info("Test: response={}", json);
+            Assert.assertNotNull(b);
+            Assert.assertEquals(200, response.code());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test3GetCustomerWithAccounts() {
         LOGGER.info("Route URL: {}", url);
         LOGGER.info("Get customer: {}", id);
         String projectName = assistant.getCurrentProjectName();
