@@ -3,6 +3,7 @@ package pl.piomin.services.vertx.customer;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.vertx.core.json.Json;
 import okhttp3.*;
+import org.arquillian.cube.istio.api.IstioResource;
 import org.arquillian.cube.openshift.api.Template;
 import org.arquillian.cube.openshift.api.Templates;
 import org.arquillian.cube.openshift.impl.client.OpenShiftAssistant;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
         @Template(url = "classpath:deployment.yaml"),
         @Template(url = "classpath:account-deployment.yaml")
 })
+@IstioResource("classpath:customer-to-account-route.yaml")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerCommunicationTest {
 

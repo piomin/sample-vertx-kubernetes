@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: account-service
+spec:
+  hosts:
+  - account-service
+  http:
+  - fault:
+      delay:
+        fixedDelay: 3s
+        percent: 100
+    match:
+      - sourceLabels:
+          name: customer-service
+    route:
+    - destination:
+        host: account-service
