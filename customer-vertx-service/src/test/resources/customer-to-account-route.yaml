@@ -4,7 +4,7 @@ metadata:
   name: account-service
 spec:
   hosts:
-  - account-service
+    - account-service
   http:
   - fault:
       delay:
@@ -12,7 +12,7 @@ spec:
         percent: 100
     match:
       - sourceLabels:
-          name: customer-service
+          app: customer-service
     route:
     - destination:
         host: account-service
