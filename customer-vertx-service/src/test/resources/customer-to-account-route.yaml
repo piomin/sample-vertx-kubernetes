@@ -6,13 +6,13 @@ spec:
   hosts:
     - account-service
   http:
-  - fault:
+  - match:
+    - uri:
+        prefix: /account
+    fault:
       delay:
         fixedDelay: 3s
         percent: 100
-    match:
-      - sourceLabels:
-          app: customer-service
     route:
     - destination:
         host: account-service
