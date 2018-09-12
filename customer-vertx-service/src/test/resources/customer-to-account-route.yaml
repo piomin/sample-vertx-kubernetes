@@ -6,13 +6,11 @@ spec:
   hosts:
     - account-service
   http:
-  - match:
-    - uri:
-        prefix: /account
-    fault:
+  - fault:
       delay:
-        fixedDelay: 3s
+        fixedDelay: 1s
         percent: 100
     route:
     - destination:
         host: account-service
+        subset: app-account-service

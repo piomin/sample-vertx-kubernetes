@@ -1,40 +1,140 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: account-service
+  creationTimestamp: null
   labels:
     app: account-service
+  name: account-service
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: account-service
+  strategy: {}
   template:
     metadata:
+      annotations:
+        sidecar.istio.io/status: '{"version":"364ad47b562167c46c2d316a42629e370940f3c05a9b99ccfe04d9f2bf5af84d","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","istio-certs"],"imagePullSecrets":null}'
+      creationTimestamp: null
       labels:
         app: account-service
     spec:
       containers:
-      - name: account-service
-        image: piomin/account-vertx-service
-        ports:
-        - containerPort: 8095
-        env:
+      - env:
         - name: DATABASE_NAME
           valueFrom:
-            configMapKeyRef:
-              name: mongodb
+            secretKeyRef:
               key: database-name
+              name: mongodb
         - name: DATABASE_USER
           valueFrom:
             secretKeyRef:
-              name: mongodb
               key: database-user
+              name: mongodb
         - name: DATABASE_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: mongodb
               key: database-password
+              name: mongodb
+        image: piomin/account-vertx-service
+        name: account-service
+        ports:
+        - containerPort: 8095
+        resources: {}
+      - args:
+        - proxy
+        - sidecar
+        - --configPath
+        - /etc/istio/proxy
+        - --binaryPath
+        - /usr/local/bin/envoy
+        - --serviceCluster
+        - account-service
+        - --drainDuration
+        - 45s
+        - --parentShutdownDuration
+        - 1m0s
+        - --discoveryAddress
+        - istio-pilot.istio-system:15007
+        - --discoveryRefreshDelay
+        - 1s
+        - --zipkinAddress
+        - zipkin.istio-system:9411
+        - --connectTimeout
+        - 10s
+        - --statsdUdpAddress
+        - istio-statsd-prom-bridge.istio-system:9125
+        - --proxyAdminPort
+        - "15000"
+        - --controlPlaneAuthPolicy
+        - NONE
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: INSTANCE_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: ISTIO_META_POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: ISTIO_META_INTERCEPTION_MODE
+          value: REDIRECT
+        image: gcr.io/istio-release/proxyv2:1.0.1
+        imagePullPolicy: IfNotPresent
+        name: istio-proxy
+        resources:
+          requests:
+            cpu: 10m
+        securityContext:
+          readOnlyRootFilesystem: true
+          runAsUser: 1337
+        volumeMounts:
+        - mountPath: /etc/istio/proxy
+          name: istio-envoy
+        - mountPath: /etc/certs/
+          name: istio-certs
+          readOnly: true
+      initContainers:
+      - args:
+        - -p
+        - "15001"
+        - -u
+        - "1337"
+        - -m
+        - REDIRECT
+        - -i
+        - '*'
+        - -x
+        - ""
+        - -b
+        - 8095,
+        - -d
+        - ""
+        image: gcr.io/istio-release/proxy_init:1.0.1
+        imagePullPolicy: IfNotPresent
+        name: istio-init
+        resources: {}
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+      volumes:
+      - emptyDir:
+          medium: Memory
+        name: istio-envoy
+      - name: istio-certs
+        secret:
+          optional: true
+          secretName: istio.default
+status: {}
 ---
 apiVersion: v1
 kind: Service
@@ -58,3 +158,4 @@ spec:
   to:
     kind: Service
     name: account-service
+---
