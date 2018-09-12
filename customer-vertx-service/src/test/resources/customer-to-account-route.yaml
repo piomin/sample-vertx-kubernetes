@@ -1,4 +1,15 @@
 apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: account-service
+spec:
+  host: account-service
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+---
+apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: account-service
@@ -13,4 +24,4 @@ spec:
     route:
     - destination:
         host: account-service
-        subset: app-account-service
+        subset: v1

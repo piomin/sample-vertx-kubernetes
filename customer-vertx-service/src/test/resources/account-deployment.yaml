@@ -16,6 +16,7 @@ objects:
       labels:
         app: account-service
         name: account-service
+        version: v1
     spec:
       template:
         metadata:
@@ -25,6 +26,7 @@ objects:
           labels:
             app: account-service
             name: account-service
+            version: v1
         spec:
           containers:
           - env:
@@ -167,6 +169,7 @@ objects:
       ports:
       - name: http
         port: 8095
+        targetPort: 8095
       selector:
         app: account-service
   - kind: Route
