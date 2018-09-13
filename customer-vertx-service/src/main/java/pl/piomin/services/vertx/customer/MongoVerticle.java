@@ -19,7 +19,6 @@ public class MongoVerticle extends AbstractVerticle {
 
 	@Override
 	public void start() throws Exception {
-		LOGGER.info("New version");
 		ConfigStoreOptions envStore = new ConfigStoreOptions()
 				.setType("env")
 				.setConfig(new JsonObject().put("keys", new JsonArray().add("DATABASE_USER").add("DATABASE_PASSWORD").add("DATABASE_NAME")));

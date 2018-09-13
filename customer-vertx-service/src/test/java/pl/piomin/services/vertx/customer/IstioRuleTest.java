@@ -41,8 +41,6 @@ public class IstioRuleTest {
 
     @ArquillianResource
     private IstioAssistant istioAssistant;
-    @ArquillianResource
-    OpenShiftAssistant openShiftAssistant;
 
     @RouteURL(value = "customer-route", path = "/customer")
     private URL customerUrl;
@@ -99,9 +97,12 @@ public class IstioRuleTest {
         Request request = new Request.Builder().url(url).get().build();
         try {
             Response response = httpClient.newCall(request).execute();
-            LOGGER.info("Test: response={}", response.body().string());
+            String json = response.body().string();
+            LOGGER.info("Test: response={}", json);
             Assert.assertNotNull(response.body());
             Assert.assertEquals(200, response.code());
+            Customer c = Json.decodeValue(json, Customer.class);
+            Assert.assertTrue(c.getAccounts().isEmpty());
         } catch (IOException e) {
             e.printStackTrace();
         }

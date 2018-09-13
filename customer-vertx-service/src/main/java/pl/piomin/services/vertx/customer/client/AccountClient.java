@@ -1,8 +1,10 @@
 package pl.piomin.services.vertx.customer.client;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.vertx.ext.web.client.WebClientOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +28,14 @@ public class AccountClient {
 	
 	public AccountClient findCustomerAccounts(String customerId, Handler<AsyncResult<List<Account>>> resultHandler) {
 		WebClient client = WebClient.create(vertx);
-		client.get(8095, "account-service", "/account/customer/" + customerId).send(res2 -> {
-			LOGGER.info("Response: {}", res2.result().bodyAsString());
-			List<Account> accounts = res2.result().bodyAsJsonArray().stream().map(it -> Json.decodeValue(it.toString(), Account.class)).collect(Collectors.toList());
-			resultHandler.handle(Future.succeededFuture(accounts));
+		client.get(8095, "account-service", "/account/customer/" + customerId).timeout(1000).send(res2 -> {
+			if (res2.succeeded()) {
+				LOGGER.info("Response: {}", res2.result().bodyAsString());
+				List<Account> accounts = res2.result().bodyAsJsonArray().stream().map(it -> Json.decodeValue(it.toString(), Account.class)).collect(Collectors.toList());
+				resultHandler.handle(Future.succeededFuture(accounts));
+			} else {
+				resultHandler.handle(Future.succeededFuture(new ArrayList<>()));
+			}
 		});
 		return this;
 	}

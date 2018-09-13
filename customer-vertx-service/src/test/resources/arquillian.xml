@@ -7,7 +7,7 @@
         <property name="namespace.use.current">true</property>
         <property name="namespace.use.existing">myproject</property>
         <property name="kubernetes.master">https://192.168.99.100:8443</property>
-        <property name="cube.auth.token">xOs0RwT5k3nTlm9F9uHZ6vUfVWlbi0Ush06va-tpF7s</property>
+        <property name="cube.auth.token">TYYccw6pfn7TXtH8bwhCyl2tppp5MBGq7UXenuZ0fZA</property>
         <property name="env.config.resource.name">mongo-deployment.yaml</property>
     </extension>
 
