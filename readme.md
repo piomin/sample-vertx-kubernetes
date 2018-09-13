@@ -1,3 +1,3 @@
-## Quick guide to deploying Java apps on OpenShift
+## Integration tests on OpenShift using Arquillian Cube and Istio
 
-Detailed description can be found here: [Quick guide to deploying Java apps on OpenShift](https://piotrminkowski.wordpress.com/2018/05/18/quick-guide-to-deploying-java-apps-on-openshift/) 
+Detailed description can be found here: [Integration tests on OpenShift using Arquillian Cube and Istio](https://piotrminkowski.wordpress.com/2018/09/13/integration-tests-on-openshift-using-arquillian-cube-and-istio/)
