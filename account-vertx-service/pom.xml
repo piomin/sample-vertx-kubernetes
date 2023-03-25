@@ -3,10 +3,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>pl.piomin</groupId>
-		<artifactId>sample-vertx-microservices</artifactId>
+		<artifactId>sample-vertx-kubernetes</artifactId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>account-vertx-service</artifactId>
+
+	<properties>
+		<sonar.moduleKey>${project.artifactId}</sonar.moduleKey>
+	</properties>
 
 	<dependencies>
 		<dependency>
