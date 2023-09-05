@@ -80,17 +80,17 @@ public class AccountRepositoryImpl implements AccountRepository {
         return this;
     }
 
-    @Override
-    public AccountRepository remove(String id, Handler<AsyncResult<Void>> resultHandler) {
-        client.removeDocument(Account.DB_TABLE, new JsonObject().put("_id", id), res -> {
-            if (res.succeeded()) {
-                resultHandler.handle(Future.future());
-            } else {
-                LOGGER.error("Account not found", res.cause());
-                resultHandler.handle(Future.failedFuture(res.cause()));
-            }
-        });
-        return this;
-    }
+	@Override
+	public AccountRepository remove(String id, Handler<AsyncResult<Void>> resultHandler) {
+		client.removeDocument(Account.DB_TABLE, new JsonObject().put("_id", id), res -> {
+			if (res.succeeded()) {
+				resultHandler.handle(Future.succeededFuture());
+			} else {
+				LOGGER.error("Account not found", res.cause());
+				resultHandler.handle(Future.failedFuture(res.cause()));
+			}
+		});
+		return this;
+	}
 
 }

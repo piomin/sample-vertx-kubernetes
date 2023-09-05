@@ -74,7 +74,7 @@ public class CustomerServer extends AbstractVerticle {
             });
         });
 
-        vertx.createHttpServer().requestHandler(router::accept).listen(8090);
+        vertx.createHttpServer().requestHandler(router).listen(8090);
 
     }
 
