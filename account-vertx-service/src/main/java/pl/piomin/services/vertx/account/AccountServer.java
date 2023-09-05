@@ -70,7 +70,7 @@ public class AccountServer extends AbstractVerticle {
             });
         });
 
-        vertx.createHttpServer().requestHandler(router::accept).listen(8095);
+        vertx.createHttpServer().requestHandler(router).listen(8080);
 
     }
 
