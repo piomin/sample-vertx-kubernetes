@@ -16,22 +16,22 @@ import pl.piomin.services.vertx.customer.data.Account;
 
 public class AccountClient {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AccountClient.class);
-	
-	private Vertx vertx;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AccountClient.class);
 
-	public AccountClient(Vertx vertx) {
-		this.vertx = vertx;
-	}
-	
-	public AccountClient findCustomerAccounts(String customerId, Handler<AsyncResult<List<Account>>> resultHandler) {
-		WebClient client = WebClient.create(vertx);
-		client.get(8095, "account-vertx-service", "/account/customer/" + customerId).send(res2 -> {
-			LOGGER.info("Response: {}", res2.result().bodyAsString());
-			List<Account> accounts = res2.result().bodyAsJsonArray().stream().map(it -> Json.decodeValue(it.toString(), Account.class)).collect(Collectors.toList());
-			resultHandler.handle(Future.succeededFuture(accounts));
-		});
-		return this;
-	}
-	
+    private Vertx vertx;
+
+    public AccountClient(Vertx vertx) {
+        this.vertx = vertx;
+    }
+
+    public AccountClient findCustomerAccounts(String customerId, Handler<AsyncResult<List<Account>>> resultHandler) {
+        WebClient client = WebClient.create(vertx);
+        client.get(8095, "account-vertx-service", "/account/customer/" + customerId).send(res2 -> {
+            LOGGER.info("Response: {}", res2.result().bodyAsString());
+            List<Account> accounts = res2.result().bodyAsJsonArray().stream().map(it -> Json.decodeValue(it.toString(), Account.class)).collect(Collectors.toList());
+            resultHandler.handle(Future.succeededFuture(accounts));
+        });
+        return this;
+    }
+
 }
