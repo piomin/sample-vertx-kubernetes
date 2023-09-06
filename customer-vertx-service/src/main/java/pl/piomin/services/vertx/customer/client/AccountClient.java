@@ -26,7 +26,7 @@ public class AccountClient {
 
     public AccountClient findCustomerAccounts(String customerId, Handler<AsyncResult<List<Account>>> resultHandler) {
         WebClient client = WebClient.create(vertx);
-        client.get(8095, "account-vertx-service", "/account/customer/" + customerId).send(res2 -> {
+        client.get(8080, "account-vertx-service", "/account/customer/" + customerId).send(res2 -> {
             LOGGER.info("Response: {}", res2.result().bodyAsString());
             List<Account> accounts = res2.result().bodyAsJsonArray().stream().map(it -> Json.decodeValue(it.toString(), Account.class)).collect(Collectors.toList());
             resultHandler.handle(Future.succeededFuture(accounts));

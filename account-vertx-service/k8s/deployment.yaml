@@ -16,3 +16,21 @@ spec:
         image: account-vertx-service
         ports:
         - containerPort: 8080
+        env:
+          - name: MONGO_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: mongodb
+                key: database-name
+          - name: MONGO_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: database-user
+          - name: MONGO_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: database-password
+          - name: MONGO_URL
+            value: mongodb
