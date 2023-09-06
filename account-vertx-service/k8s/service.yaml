@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-vertx-service
+spec:
+  type: ClusterIP
+  selector:
+    app: account-vertx-service
+  ports:
+  - port: 8080

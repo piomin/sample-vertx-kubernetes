@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customer-vertx-service
+spec:
+  selector:
+    matchLabels:
+      app: customer-vertx-service
+  template:
+    metadata:
+      labels:
+        app: customer-vertx-service
+    spec:
+      containers:
+      - name: customer-vertx-service
+        image: customer-vertx-service
+        ports:
+        - containerPort: 8080

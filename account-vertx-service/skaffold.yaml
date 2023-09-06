@@ -1,0 +1,11 @@
+apiVersion: skaffold/v4beta5
+kind: Config
+build:
+  artifacts:
+  - image: account-vertx-service
+deploy:
+  kubectl: {}
+manifests:
+  rawYaml:
+    - 'k8s/*.yaml'
+    - '../k8s/mongodb.yaml'
