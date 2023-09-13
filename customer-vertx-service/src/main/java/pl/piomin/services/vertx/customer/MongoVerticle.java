@@ -13,8 +13,22 @@ import pl.piomin.services.vertx.customer.data.CustomerRepositoryImpl;
 
 public class MongoVerticle extends AbstractVerticle {
 
+    private String url;
+
+    public MongoVerticle() {
+    }
+
+    public MongoVerticle(String url) {
+        this.url = url;
+    }
+
     @Override
     public void start() {
+
+        if (url != null) {
+            createMongo(url);
+            return;
+        }
 
         ConfigStoreOptions env = new ConfigStoreOptions()
                 .setType("env")
@@ -28,15 +42,18 @@ public class MongoVerticle extends AbstractVerticle {
                 .addStore(env);
         ConfigRetriever retriever = ConfigRetriever.create(vertx, options);
         retriever.getConfig().onSuccess(c -> {
-            JsonObject config = new JsonObject();
             String url = String.format("mongodb://%s:%s@%s/%s", c.getString("MONGO_USERNAME"), c.getString("MONGO_PASSWORD"),
                     c.getString("MONGO_URL"), c.getString("MONGO_DATABASE"));
-            config.put("connection_string", url);
-            final MongoClient client = MongoClient.createShared(vertx, config);
-            final CustomerRepositoryImpl service = new CustomerRepositoryImpl(client);
-            ProxyHelper.registerService(CustomerRepositoryImpl.class, vertx, service, "customer-service");
+            createMongo(url);
         });
 
     }
 
+    private void createMongo(String url) {
+        JsonObject config = new JsonObject();
+        config.put("connection_string", url);
+        final MongoClient client = MongoClient.createShared(vertx, config);
+        final CustomerRepository service = new CustomerRepositoryImpl(client);
+        ProxyHelper.registerService(CustomerRepository.class, vertx, service, "customer-service");
+    }
 }

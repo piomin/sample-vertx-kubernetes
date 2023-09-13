@@ -1,9 +1,5 @@
 {
 	"port" : 8080,
-	"discovery" : {
-		"host" : "localhost",
-		"port" : 8500
-	},
 	"datasource" : {
 		"host" : "localhost",
 		"port" : 27017,
