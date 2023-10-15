@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-alpine
+FROM eclipse-temurin:21-alpine
 ENV VERTICLE_FILE customer-vertx-service-1.0-SNAPSHOT.jar
 ENV VERTICLE_HOME /usr/verticles
 EXPOSE 8080
