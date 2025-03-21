@@ -38,7 +38,7 @@ public class CustomerServer extends AbstractVerticle {
         router.get("/customer/:id").produces("application/json").handler(rc -> {
             repository.findById(rc.request().getParam("id"), res -> {
                 Customer customer = res.result();
-                LOGGER.info("Found: {}", customer);
+                LOGGER.info("Found by id: {}", customer);
                 new AccountClient(vertx).findCustomerAccounts(customer.getId(), res2 -> {
                     customer.setAccounts(res2.result());
                     rc.response().end(customer.toString());
@@ -48,7 +48,7 @@ public class CustomerServer extends AbstractVerticle {
         router.get("/customer/name/:name").produces("application/json").handler(rc -> {
             repository.findByName(rc.request().getParam("name"), res -> {
                 List<Customer> customers = res.result();
-                LOGGER.info("Found: {}", customers);
+                LOGGER.info("Found by name: {}", customers);
                 rc.response().end(Json.encodePrettily(customers));
             });
         });
@@ -60,7 +60,8 @@ public class CustomerServer extends AbstractVerticle {
             });
         });
         router.post("/customer").produces("application/json").handler(rc -> {
-            Customer c = Json.decodeValue(rc.getBodyAsString(), Customer.class);
+//            Customer c = Json.decodeValue(rc.body().asString(), Customer.class);
+            Customer c = rc.body().asPojo(Customer.class);
             repository.save(c, res -> {
                 Customer customer = res.result();
                 LOGGER.info("Created: {}", customer);

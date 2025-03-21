@@ -8,6 +8,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 import io.vertx.serviceproxy.ProxyHelper;
+import io.vertx.serviceproxy.ServiceBinder;
 import pl.piomin.services.vertx.customer.data.CustomerRepository;
 import pl.piomin.services.vertx.customer.data.CustomerRepositoryImpl;
 
@@ -54,6 +55,7 @@ public class MongoVerticle extends AbstractVerticle {
         config.put("connection_string", url);
         final MongoClient client = MongoClient.createShared(vertx, config);
         final CustomerRepository service = new CustomerRepositoryImpl(client);
-        ProxyHelper.registerService(CustomerRepository.class, vertx, service, "customer-service");
+        new ServiceBinder(vertx).setAddress("customer-service").register(CustomerRepository.class, service);
+//        ProxyHelper.registerService(CustomerRepository.class, vertx, service, "customer-service");
     }
 }

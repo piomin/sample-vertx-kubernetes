@@ -37,14 +37,14 @@ public class AccountServer extends AbstractVerticle {
         router.get("/account/:id").produces("application/json").handler(rc -> {
             repository.findById(rc.request().getParam("id"), res -> {
                 Account account = res.result();
-                LOGGER.info("Found: {}", account);
+                LOGGER.info("Found by id: {}", account);
                 rc.response().end(account.toString());
             });
         });
         router.get("/account/customer/:customer").produces("application/json").handler(rc -> {
             repository.findByCustomer(rc.request().getParam("customer"), res -> {
                 List<Account> accounts = res.result();
-                LOGGER.info("Found: {}", accounts);
+                LOGGER.info("Found by customer: {}", accounts);
                 rc.response().end(Json.encodePrettily(accounts));
             });
         });
