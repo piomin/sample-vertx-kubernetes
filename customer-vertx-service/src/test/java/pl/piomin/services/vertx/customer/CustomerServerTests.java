@@ -1,9 +1,11 @@
 package pl.piomin.services.vertx.customer;
 
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientResponse;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClient;
 import io.vertx.junit5.VertxExtension;
 import io.vertx.junit5.VertxTestContext;
@@ -32,7 +34,15 @@ public class CustomerServerTests {
         mongoDBContainer.start();
 
         vertx.deployVerticle(new MongoVerticle(mongoDBContainer.getReplicaSetUrl()));
-        vertx.deployVerticle(new CustomerServer());
+        var deploymentOptions = new DeploymentOptions().setConfig(new JsonObject()
+                .put("datasource.uri", mongoDBContainer.getReplicaSetUrl()));
+//                .put("datasource.username", DB_USERNAME));
+//    deploymentOptions.config = jsonObjectOf(
+//                "datasource.uri" to dbUri,
+//                "datasource.username" to DB_USERNAME,
+//                "datasource.password" to DB_PASSWORD,
+//                )
+        vertx.deployVerticle(new CustomerServer(), deploymentOptions);
     }
 
     @AfterAll

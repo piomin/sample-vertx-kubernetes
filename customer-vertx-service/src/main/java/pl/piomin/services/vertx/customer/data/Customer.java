@@ -1,10 +1,10 @@
 package pl.piomin.services.vertx.customer.data;
 
-import java.util.List;
-
 import io.vertx.codegen.annotations.DataObject;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
+
+import java.util.List;
 
 @DataObject
 public class Customer {
