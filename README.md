@@ -1,7 +1,13 @@
-# Reactive Vert.x Micro-services Demo
+## Running Vert.x Microservices on Kubernetes/OpenShift [![Twitter](https://img.shields.io/twitter/follow/piotr_minkowski.svg?style=social&logo=twitter&label=Follow%20Me)](https://twitter.com/piotr_minkowski)
 
-![Build](https://img.shields.io/badge/build-maven-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+[![CircleCI](https://circleci.com/gh/piomin/sample-vertx-kubernetes.svg?style=svg)](https://circleci.com/gh/piomin/sample-vertx-kubernetes)
+
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-black.svg)](https://sonarcloud.io/dashboard?id=piomin_sample-vertx-kubernetes)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=piomin_sample-vertx-kubernetes&metric=bugs)](https://sonarcloud.io/dashboard?id=piomin_sample-vertx-kubernetes)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=piomin_sample-vertx-kubernetes&metric=coverage)](https://sonarcloud.io/dashboard?id=piomin_sample-vertx-kubernetes)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=piomin_sample-vertx-kubernetes&metric=ncloc)](https://sonarcloud.io/dashboard?id=piomin_sample-vertx-kubernetes)
+
+Detailed description can be found here: [Running Vert.x Microservices on Kubernetes/OpenShift](https://piotrminkowski.com/2018/03/20/running-vert-x-microservices-on-kubernetes-openshift/)
 
 A demo showing two independent Vert.x 4 micro-services (**Account** and **Customer**) communicating with a shared MongoDB instance and ready for local or Kubernetes development with Skaffold.
 
